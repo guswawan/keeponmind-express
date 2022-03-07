@@ -5,12 +5,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "nodemon server.js"
+    "dev": "nodemon server.js",
+    "db": "nodemon mongodb.js"
   },
   "author": "guswawan",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.3",
+    "mongodb": "^4.4.1",
     "nodemon": "^2.0.15"
   }
 }
