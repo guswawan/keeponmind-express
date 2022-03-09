@@ -3,9 +3,10 @@
 relearn old lessons about expressjs and integration with mongoDB
 
 
-### Tech Stack
+### Tools
 * Expressjs
 * MongoDB
+* mongoose
 
 
 ### run project
