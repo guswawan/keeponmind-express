@@ -1,19 +1,20 @@
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const router = express.Router();
 const connection = require('./connection');
 
 //middleware
-const myLogger = (req, res, next) => {
+const myLogger = (_req, _res, next) => {
   console.log('LOGGED');
   next();
 };
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.send('Hello World!');
 });
 
 //routing with data from database
-router.get('/users', async (req, res) => {
+router.get('/users', async (_req, res) => {
   try {
     if (connection) {
       const db = connection.db('db_latihan');
@@ -56,16 +57,78 @@ router.get('/user', (req, res) => {
   res.send(`Nama: ${name} & usia: ${age}`);
 });
 
-router.post('/user', (req, res) => {
-  res.send('Got a POST request /user');
+router.post('/user', async (req, res) => {
+  try {
+    if (connection) {
+      const { name, age, status } = req.body;
+      const db = connection.db('db_latihan');
+      const users = await db.collection('users').insertOne({
+        name,
+        age,
+        status,
+      });
+      if (insertedId) {
+        res.send({ message: 'data berhasil ditambahkan.' });
+      } else {
+        res.send({ message: 'gagal menambah data.' });
+      }
+    } else {
+      res.send({ message: 'koneksi database gagal.' });
+    }
+  } catch (err) {
+    res.send({ message: err.message || 'internal server error' });
+  }
 });
 
-router.put('/user', (req, res) => {
-  res.send('Got a PUT request at /user');
+router.put('/user/:id', async (req, res) => {
+  try {
+    if (connection) {
+      const { id } = req.params;
+      const { name, age, status } = req.body;
+      const db = connection.db('db_latihan');
+      const users = await db.collection('users').updateOne(
+        { _id: ObjectId(id) },
+        {
+          $set: {
+            name,
+            age,
+            status,
+          },
+        }
+      );
+      if (Number(users.modifiedCount) === 1) {
+        res.send({ message: 'data berhasil diubah.' });
+      } else {
+        res.send({ message: 'gagal mengubah data.' });
+      }
+    } else {
+      res.send({ message: 'koneksi database gagal.' });
+    }
+  } catch (err) {
+    res.send({ message: err.message || 'internal server error' });
+  }
 });
 
-router.delete('/user', (req, res) => {
-  res.send('Got a DELETE request at /user');
+router.delete('/user/:id', async (req, res) => {
+  try {
+    if (connection) {
+      const { id } = req.params;
+      const db = connection.db('db_latihan');
+      const users = await db
+        .collection('users')
+        .deleteOne({ _id: ObjectId(id) });
+      console.log('DEL', users);
+      if (Number(users.deletedCount) === 1) {
+        res.send({ message: 'data berhasil dihapus.' });
+      } else {
+        res.send({ message: 'gagal menghapus data.' });
+      }
+    } else {
+      res.send({ message: 'koneksi database gagal.' });
+    }
+  } catch (err) {
+    res.send({ message: err.message || 'internal server error' });
+  }
 });
 
 module.exports = router;
