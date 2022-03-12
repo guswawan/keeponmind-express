@@ -9,12 +9,12 @@ relearn old lessons about expressjs and integration with mongoDB
 * mongoose
 
 
-### run project
+### Run project
 ```
 npm run dev
 ```
 
-### run local database
+### Run local database
 ```
 npm run db
 ```
