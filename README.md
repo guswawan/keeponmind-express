@@ -7,6 +7,7 @@ relearn old lessons about expressjs and integration with mongoDB
 * Expressjs
 * MongoDB
 * mongoose
+* nodemon
 
 
 ### Run project
